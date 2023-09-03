@@ -1,4 +1,5 @@
 import pygame
+from random import randint
 pygame.init()
 win_fon = (15,155,70)
 win_h = 600
@@ -33,17 +34,41 @@ class Player(GameObject):
 player1 = Player(55,win_h/2 , 25,115,platform_pict ,4 )  
 player2 = Player(615,win_h/2 , 25,115,platform_pict ,4 )  
 class Ball(GameObject):
-    def __init__(self, x, y, w, h, image, speed):
+    def __init__(self, x, y, w, h, image,speed):
         super().__init__(x, y, w, h, image, speed)
-    def move():
-        pass
+        self.speed_x = speed
+        self.speed_y = speed
+def move():
+    ball.rect.x += ball.speed_x
+    ball.rect.y += ball.speed_y
+def rotate():
+    if ball.rect.colliderect(player1):
+        ball.speed_y *= -1
+
+    if  ball.rect.colliderect(player2):
+        ball.speed_x *= -1
+    
+    if ball.rect.y <= 0:
+        ball.speed_y *= -1
+    
+    if ball.rect.x <= 0:
+        ball.speed_x *= -1
+    if ball.rect.bottom >= win_h:
+#       ball.rect.x *= -1
+        ball.speed_y *= -1
 ball_pict = pygame.image.load("pinpong_ball.png")
-ball = Ball((win_w - 50) / 2   , win_h/2 , 50,50,ball_pict , 2)
+ball = Ball((win_w - 50) / 2   , win_h/2 , 50,50,ball_pict , 5 )
+
 while game :
+
     window.fill(win_fon)
     player1.update()
     player2.update()
     ball.update()
+    rotate()
+    move()
+    if ball.rect.colliderect(player1) or ball.rect.colliderect(player2): 
+        ball
     player1.move(pygame.K_w , pygame.K_s)
     player2.move(pygame.K_UP , pygame.K_DOWN)
     for event in pygame.event.get():
